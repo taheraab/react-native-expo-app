@@ -6,6 +6,7 @@ import { Sheet } from '@/components/shared/Sheet';
 import phraseGroup from '../../data/phraseGroup';
 import { Element } from 'domhandler';
 import { replaceElement } from 'domutils';
+import { ScrollView } from 'react-native-gesture-handler';
 
 type RichTextProps = {
   html: string
@@ -36,6 +37,11 @@ const domVisitors = {
   onElement: onElement
 };
 
+const classesStyles = {
+  ['table-wrapper']: {
+    width: 800
+  }
+}
 export function RichText({html}: RichTextProps) {
   const { width } = useWindowDimensions();
   const [phraseGroupId, setPhraseGroupId] = useState(null);
@@ -55,16 +61,17 @@ export function RichText({html}: RichTextProps) {
   }
 
   const renderers = {
-    a: LinkRenderer
+    a: LinkRenderer,
   };
-  
-  const phraseGroupElm = phraseGroupId ? (
+
+
+  const phraseGroupElm = phraseGroupId && phraseGroup[phraseGroupId] ? (
     <Sheet content={<PhraseGroup id={phraseGroupId} />} onClose={() => setPhraseGroupId(null)} />
   ) : null;
 
   return (
     <>
-    <RenderHtml contentWidth={width} source={{html}} renderers={renderers} domVisitors={domVisitors}/>
+    <RenderHtml baseStyle={{fontSize: 16, lineHeight: 24}} classesStyles={classesStyles} contentWidth={width} source={{html}} renderers={renderers} domVisitors={domVisitors}/>
     {phraseGroupElm}
     </>
   )
