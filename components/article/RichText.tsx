@@ -37,11 +37,6 @@ const domVisitors = {
   onElement: onElement
 };
 
-const classesStyles = {
-  ['table-wrapper']: {
-    width: 800
-  }
-}
 export function RichText({html}: RichTextProps) {
   const { width } = useWindowDimensions();
   const [phraseGroupId, setPhraseGroupId] = useState(null);
@@ -71,7 +66,7 @@ export function RichText({html}: RichTextProps) {
 
   return (
     <>
-    <RenderHtml baseStyle={{fontSize: 16, lineHeight: 24}} classesStyles={classesStyles} contentWidth={width} source={{html}} renderers={renderers} domVisitors={domVisitors}/>
+    <RenderHtml baseStyle={{fontSize: 16, lineHeight: 24}} contentWidth={width} source={{html}} renderers={renderers} domVisitors={domVisitors}/>
     {phraseGroupElm}
     </>
   )
