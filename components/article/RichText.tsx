@@ -1,24 +1,12 @@
-import {useState} from 'react';
-import {StyleSheet, Text, View, useWindowDimensions} from 'react-native';
+import {useWindowDimensions} from 'react-native';
 import RenderHtml from 'react-native-render-html';
-import { ThemedText } from '@/components/shared/ThemedText';
-import { Sheet } from '@/components/shared/Sheet';
-import phraseGroup from '../../data/phraseGroup';
+
 import { Element } from 'domhandler';
 import { replaceElement } from 'domutils';
-import { ScrollView } from 'react-native-gesture-handler';
 
 type RichTextProps = {
-  html: string
-}
-
-function PhraseGroup({id}: any) {
-  return (
-    <>
-      <ThemedText type="title">{phraseGroup[id].title}</ThemedText>
-      <ThemedText type="subtitle">{phraseGroup[id].abstract}</ThemedText>
-    </>
-  )
+  html: string,
+  onLinkPress: (phraseGroupId: string) => void;
 }
 
 function onElement(element: Element) {
@@ -37,12 +25,9 @@ const domVisitors = {
   onElement: onElement
 };
 
-export function RichText({html}: RichTextProps) {
+export function RichText({html, onLinkPress}: RichTextProps) {
   const { width } = useWindowDimensions();
-  const [phraseGroupId, setPhraseGroupId] = useState(null);
-
-  console.log('phraseGroupId', phraseGroupId);
-
+  
   function LinkRenderer({
     TDefaultRenderer,
     ...props
@@ -50,7 +35,7 @@ export function RichText({html}: RichTextProps) {
     return (
       <TDefaultRenderer
         {...props}
-        onPress={() => setPhraseGroupId(props.tnode.domNode.attribs['data-phrasegroup-id'])}
+        onPress={() => onLinkPress(props.tnode.domNode.attribs['data-phrasegroup-id'])}
       />
     );
   }
@@ -59,15 +44,7 @@ export function RichText({html}: RichTextProps) {
     a: LinkRenderer,
   };
 
-
-  const phraseGroupElm = phraseGroupId && phraseGroup[phraseGroupId] ? (
-    <Sheet content={<PhraseGroup id={phraseGroupId} />} onClose={() => setPhraseGroupId(null)} />
-  ) : null;
-
   return (
-    <>
     <RenderHtml baseStyle={{fontSize: 16, lineHeight: 24}} contentWidth={width} source={{html}} renderers={renderers} domVisitors={domVisitors}/>
-    {phraseGroupElm}
-    </>
   )
 }

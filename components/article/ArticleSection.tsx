@@ -4,7 +4,12 @@ import { RichText } from '@/components/article/RichText';
 import { ThemedText } from '@/components/shared/ThemedText';
 import Collapsible from 'react-native-collapsible';
 
-export function ArticleSection({item}: any) {
+type ArticleSectionProps = {
+  item: any;
+  onLinkPress: (id: string) => void
+ }
+
+export function ArticleSection({item, onLinkPress}: ArticleSectionProps) {
   const [isCollapsed, setIsCollapsed] = useState(true);
 
   return (
@@ -13,7 +18,7 @@ export function ArticleSection({item}: any) {
         <ThemedText type="subtitle">{item.title}</ThemedText>
       </Pressable>
       <Collapsible collapsed={isCollapsed}>
-        <RichText html={item.text} />
+        <RichText html={item.text} onLinkPress={onLinkPress}/>
       </Collapsible>
     </View>
   )
